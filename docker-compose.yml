@@ -1,29 +1,38 @@
-nginx:
-  image: nginx:latest
-  # ports:
-    # - "8081:80"
+version: "3.7"
 
-elasticsearch:
-  build: .
-  dockerfile: Dockerfile.elasticsearch 
-  command: elasticsearch -Des.network.host=0.0.0.0
-  ports:
-    - "9200:9200"
-    - "9300:9300"
-kibana:
-  # build: .
-  # dockerfile: Dockerfile.kibana 
-  image: kibana:4.3.1
-  ports:
-    - "5601:5601"
-  links:
-    - elasticsearch
-# spark:
-#   build: .
-#   dockerfile: Dockerfile.spark
-#   command: <your_consumer_key> <your_consumer_secret> <your_access_token> <your_access_token_secret> [<filters>]
+volumes:
+  db-volume:
 
-#   ports:
-#     - "4040:4040"
-#   links:
-#     - elasticsearch 
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8081:80"
+    volumes:
+      - db-volume:/var/lib/db
+
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: Dockerfile.elasticsearch 
+    command: elasticsearch -Des.network.host=0.0.0.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    # build: .
+    # dockerfile: Dockerfile.kibana 
+    image: kibana:4.3.1
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
+  # spark:
+  #   build: .
+  #   dockerfile: Dockerfile.spark
+  #   command: <your_consumer_key> <your_consumer_secret> <your_access_token> <your_access_token_secret> [<filters>]
+
+  #   ports:
+  #     - "4040:4040"
+  #   links:
+  #     - elasticsearch 
