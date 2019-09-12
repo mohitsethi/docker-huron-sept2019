@@ -2,12 +2,13 @@ version: "3.7"
 
 volumes:
   db-volume:
+    driver: local
 
 services:
   nginx:
     image: nginx:latest
-    ports:
-      - "8081:80"
+    # ports:
+    #   - "8081:80"
     volumes:
       - db-volume:/var/lib/db
 
